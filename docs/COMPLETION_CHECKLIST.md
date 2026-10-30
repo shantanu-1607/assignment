@@ -1,6 +1,6 @@
 # Assessment completion checklist
 
-This maps the uploaded assessment prompt to concrete deliverables. The technical
+This maps the assessment requirements to concrete deliverables. The technical
 work is complete within the requested passive scope. Repository access must be
 arranged before submitting a private repository URL to an external reviewer.
 
@@ -22,18 +22,17 @@ arranged before submitting a private repository URL to an external reviewer.
 | Architecture diagrams | Done | Mermaid observed/proposed and middleware flows in `ARCHITECTURE.md`; compact overview in README |
 | Evidence-to-code/test traceability | Done | F-001–F-007 matrix in `RECOMMENDATIONS.md`; explicitly marks recommendations outside the stateless implementation |
 | Engineering decisions and roadmap | Done | Five ADRs and impact/confidence/cost-based roadmap in `RECOMMENDATIONS.md` |
-| Polished setup/review documentation | Done | README: five-minute path, setup, requests/responses, checks, configuration and limitations |
+| Polished setup/review documentation | Done | README: review path, setup and examples; `API.md`: contracts, errors, configuration and limits |
 | Formatting, vet, tests and race checks | Passed | Local verification recorded in `VERIFICATION.md`; hosted CI also passed |
 | Real startup, HTTP and shutdown checks | Passed | `examples/smoke.py`; local and hosted CI execution |
 | Clean, meaningful history and publication | Done | Milestone commits on GitHub `main`; no co-author trailers added |
 | Submission text, 100–150 words | Done | `SUBMISSION.md` |
-| External reviewer access | Owner action required | Owner approved public visibility; GitHub rejected the integration’s PATCH with 403 (`Resource not accessible by integration`). Repository owner must change visibility in Settings → Danger Zone → Change repository visibility → Make public |
+| External reviewer access | Owner action required | Repository was still private at the final access check; see the submission steps below |
 
 ## Deliberate scope decisions
 
-- The cloud checkout is `/workspace/assignment`. The prompt's local Desktop folder
-  does not exist in this environment; the requester explicitly selected this
-  GitHub repository. No duplicate project or worktree was created.
+- The project checkout is `/workspace/assignment` in the cloud environment. Local
+  reviewers can clone it into any working directory.
 - Live deployment is optional and not needed for the repository-based submission.
   No public deployment is claimed. Local curl commands are demonstrations, not
   publicly reachable links.
@@ -49,11 +48,12 @@ arranged before submitting a private repository URL to an external reviewer.
 ## Before portal submission
 
 1. Make the repository public in GitHub Settings → Danger Zone → Change repository
-   visibility → Make public. The owner already approved this; the platform
-   integration lacks the administration permission needed to do it. A private
-   URL alone is insufficient.
+   visibility → Make public. The authenticated repository API still reported `private: true` at the final
+   check. An approved API attempt to change visibility returned 403 because the
+   integration lacks administration permission. This step needs the repository
+   owner; a private URL alone is insufficient for an external reviewer.
 2. Submit `https://github.com/shantanu-1607/assignment` with `SUBMISSION.md` text.
 3. If the portal accepts files, a source ZIP can also be generated with
    `git archive --format=zip --output=/path/outside/checkout/assignment.zip HEAD`.
-4. The portal submission itself remains the requester's action; no assessment
-   application, external message or form has been sent by this project.
+4. Check the latest GitHub Actions result before submission. The scripts do not
+   submit an assessment application or send external messages.

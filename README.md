@@ -1,48 +1,64 @@
-# Cynbit backend assessment
+# Cynbit Backend Technical Assessment
 
-An evidence-bounded technical report and a standalone Go reference API for the
-Cynbit Backend Developer Intern assessment. Standard library only; no credentials,
-database or third-party services required.
+A passive review of [Cynbit's public website](https://www.cynbit.in/) and a Go
+reference API demonstrating the recommended HTTP, validation and reliability
+controls. Prepared for the **Backend Developer Intern** assessment.
 
-> **Review status:** public-site review and the Go reference are complete within
-> the passive scope. Browser navigation, headers, empty form schemas and public
-> client code were inspected at `https://www.cynbit.in/`. No forms were submitted
-> or private/authenticated workflows tested. Read the [evidence ledger](docs/EVIDENCE.md)
-> for timestamps, sources and the remaining identity/internal-system limitations.
+**Review date:** October 31, 2026 (IST). **Implementation:** Go standard library;
+no database, credentials or third-party Go dependencies.
 
-## Five-minute review
+## Start here
 
-1. Read the [audit summary and scope](docs/AUDIT_REPORT.md).
-2. Inspect the [findings and recommendations](docs/SECURITY_FINDINGS.md) and
-   [evidence-to-code matrix](docs/RECOMMENDATIONS.md).
-3. Run `make check`, then `make run` and the requests below.
-4. Read the [architecture](docs/ARCHITECTURE.md) and
-   [performance tradeoffs](docs/PERFORMANCE_ANALYSIS.md).
+| Review goal | Read or run |
+|---|---|
+| Understand the assessment in five minutes | [Audit report](docs/AUDIT_REPORT.md) and the findings below |
+| Check the supporting evidence | [Evidence ledger](docs/EVIDENCE.md), [sanitized observations](docs/evidence/public-observations.json), [empty-form screenshot](docs/evidence/contact-form.png) |
+| Inspect the proposed improvements | [Recommendations and test traceability](docs/RECOMMENDATIONS.md) |
+| Evaluate the implementation | `make check`, then `make smoke` |
+| Prepare the submission | [Submission text](docs/SUBMISSION.md) and [completion checklist](docs/COMPLETION_CHECKLIST.md) |
 
-Assessment deadline supplied by the requester: November 1, 2026, 10:01 AM IST.
-Public review completed October 31, 2026 IST. Key observations: Next.js/RSC and
-Vercel cache indicators; no HTML length caps on inquiry/demo fields; sampled
-security-header gaps; local Server Action exception-recovery opportunities; and
-a review need for mandatory applicant data and analytics cookie behavior. These
-are bounded observations and recommendations, not claims of exploited flaws.
-Passive-only scope: public navigation and ordinary requests; no exploitation,
-fuzzing, scanning, endpoint guessing, authentication bypass or production load tests.
+## Findings at a glance
 
-## What the reference demonstrates
+| Observation | Why it matters | Recommendation |
+|---|---|---|
+| Inquiry/demo fields have required/email constraints but no HTML length caps | Client and server contracts should agree; backend limits remain unverified | Define shared limits and enforce them independently on the server — F-001 |
+| Inspected Server Action callers lack local rejection cleanup | A rejected call could bypass pending-state reset | Handle exceptions and reset UI state in `finally` — F-004 |
+| Sampled document responses include HSTS but omit several other security headers | Browser response policy can be strengthened | Review framing, referrer and MIME policy; stage a Next.js-compatible CSP — F-005 |
+| Application labels require DOB, address and multiple contact fields | Initial collection should have a clear hiring purpose | Review necessity, collection stage, access and retention — F-007 |
+| Marketing pages return cache hits and validators; careers/blog use no-store | There is already useful cache separation | Preserve it and measure freshness needs before changing dynamic routes — F-003 |
 
-- Versioned JSON endpoints; strict required keys/types, duplicate/null rejection,
-  4 KiB body limit and domain validation.
-- Stable error codes, sanitized messages and server-generated request IDs.
-- Public immutable catalog with ETag, GET/HEAD and conditional 304 responses.
-- Per-peer bounded rate limiter, 32 active worker slots, deadlines and cancellation.
-- Security response headers, no permissive CORS, no cookies or stored personal data.
-- Explicit server read/write/idle limits, health/readiness and graceful shutdown.
-- Structured JSON logs excluding request bodies and sensitive headers.
-- Tests for contracts, limits, cache semantics, cancellation and concurrency.
+[Full findings](docs/SECURITY_FINDINGS.md) also cover resource limits and analytics
+cookies. Each distinguishes direct observations, source-based inferences and
+proposed controls. No exploited vulnerability or production bottleneck is claimed.
 
-**Illustrative domain:** the two catalog entries and effort-unit calculation are
-invented examples, not Cynbit offerings, prices or discovered endpoints. POST
-calculates a result without creating a persisted resource, so it returns 200.
+## Scope
+
+The review used ordinary public navigation, response headers, empty form schemas,
+and browser-loaded JavaScript. It covered services, products, contact, careers,
+the backend internship, blog pagination, and privacy/cookie policies. No forms
+were submitted or authenticated product workflows tested.
+
+The site identifies as Cynbit Technologies and lists the matching internship.
+The assessment email did not provide a domain, so independent ownership
+verification is limited. Server-side validation, authorization, database behavior
+and delivery guarantees require separate internal or authorized staging access.
+See the [evidence ledger](docs/EVIDENCE.md) for timestamps and precise limits.
+
+## Reference implementation
+
+The API uses an illustrative catalog and stateless effort calculator to demonstrate
+controls without collecting applicant data or depending on production services.
+Its service names, units and endpoints are examples, not Cynbit's actual offerings
+or discovered APIs.
+
+- **Contracts:** versioned routes, strict JSON types/keys, required fields,
+  duplicate/null rejection, 4 KiB body cap and domain validation.
+- **Security:** safe errors, generated request IDs, response headers and bounded
+  peer quotas; request bodies and credentials are excluded from logs.
+- **Reliability:** bounded active work, context deadlines, health/readiness,
+  server timeouts and graceful shutdown.
+- **Caching:** stable public representations, ETags, GET/HEAD and conditional 304s;
+  estimates and errors use `no-store`.
 
 ```mermaid
 flowchart LR
@@ -53,122 +69,81 @@ flowchart LR
   API --> Calculator[Context-aware calculator]
 ```
 
-## Run locally
+[Architecture diagrams](docs/ARCHITECTURE.md) compare observed public interactions
+with the proposed design. [Engineering decisions](docs/RECOMMENDATIONS.md) explain
+why the example uses in-memory quotas and avoids speculative infrastructure.
 
-Prerequisites: Go 1.24+ and Make (optional). Race tests require a supported C
-compiler. Verified toolchain and results are recorded in [verification](docs/VERIFICATION.md).
-No environment secrets or module downloads are needed. Use the existing checkout;
-no worktree is required.
+## Quick start
+
+Requires **Go 1.24+**, Make and a C compiler for race detection. The optional smoke
+script requires Python 3. Verified toolchain: Go 1.27.3 on Linux amd64.
 
 ```sh
-cd /path/to/assignment
-make check
-make run
+git clone https://github.com/shantanu-1607/assignment.git
+cd assignment
+make check       # formatting, vet and race tests
+make smoke       # build, real HTTP checks and SIGTERM shutdown
+make run         # development server on 127.0.0.1:8080
 ```
 
-The server defaults to `127.0.0.1:8080`. Stop with Ctrl+C; SIGTERM also drains.
-`make build` produces `bin/server`. Without Make:
+From an existing checkout, start with `make check`. Stop the server with Ctrl+C.
+`make build` produces `bin/server`. Without Make, use `go vet ./...`,
+`go test -race ./...`, and `go run ./cmd/server`. Cloud-specific tool activation
+is documented in [verification notes](docs/VERIFICATION.md#cloud-workspace-notes).
+
+In another terminal:
 
 ```sh
-go vet ./...
-go test -race ./...
-go run ./cmd/server
-```
-
-For this cloud machine specifically, the installed Go binary is outside the repo:
-
-```sh
-export PATH=/workspace/.tools/go/bin:$PATH
-export GOCACHE=/workspace/.cache/go-build
-export GOPATH=/workspace/.cache/gopath
-cd /workspace/assignment
-make check
-```
-
-| Variable | Default | Constraints |
-|---|---|---|
-| `ADDR` | `127.0.0.1:8080` | host:port; use a free local port |
-| `REQUEST_TIMEOUT` | `2s` | 1ms..30s |
-| `RATE_PER_MINUTE` | `60` | 1..10000 per direct peer |
-
-For example: `ADDR=127.0.0.1:8090 REQUEST_TIMEOUT=1s go run ./cmd/server`.
-Configuration errors fail startup. No `.env` loader is included.
-
-## Exercise the API
-
-Local loopback addresses below are internal command examples, not public demos.
-
-```sh
-curl -i http://127.0.0.1:8080/healthz
-curl -i http://127.0.0.1:8080/readyz
 curl -i http://127.0.0.1:8080/v1/services
-curl -I http://127.0.0.1:8080/v1/services
 curl -i -H 'Content-Type: application/json' \
   -d '{"service_id":"api-review","integrations":2}' \
   http://127.0.0.1:8080/v1/estimates
 ```
 
-Estimate response (request ID shortened here for readability):
+The estimate returns HTTP 200 (request ID abbreviated):
 
 ```json
-{"data":{"service_id":"api-review","effort_units":7,"disclaimer":"Illustrative units only; not a quote or Cynbit service."},"request_id":"..."}
+{
+  "data": {
+    "service_id": "api-review",
+    "effort_units": 7,
+    "disclaimer": "Illustrative units only; not a quote or Cynbit service."
+  },
+  "request_id": "..."
+}
 ```
 
-Invalid domain input with `integrations:21` returns HTTP 422:
+The [API reference](docs/API.md) documents all routes, error codes, configuration
+and conditional caching examples. These commands run locally; no public demo is
+deployed.
 
-```json
-{"error":{"code":"validation_failed","message":"service_id must be a catalog ID; integrations must be 0..20"},"request_id":"..."}
-```
+## Validation and tradeoffs
 
-Use the actual `ETag` from the catalog response as `If-None-Match` on a subsequent
-GET to receive 304 with no body. Catalog JSON contains only `data`; correlation is
-in `X-Request-ID` to keep the cacheable representation stable. Every other normal
-JSON response includes `request_id`. A canceled client may disconnect before any
-response is delivered. Errors/calculations are `no-store`. Limit breaches return
-413 (body), 429 (quota, with Retry-After) or 503 (capacity/deadline).
+Formatting, vet, 16 top-level tests, race detection and real HTTP/shutdown smoke
+checks passed locally. [Hosted CI](https://github.com/shantanu-1607/assignment/actions/workflows/check.yml)
+also passed for the recorded milestone; exact run/commit evidence is in
+[VERIFICATION.md](docs/VERIFICATION.md).
 
-Run the local automated smoke script after building; it starts its own server,
-uses a dedicated port and shuts down only its own process:
+The limiter is per process, capped at 1,024 peers, and resets on restart. Fixed
+windows permit boundary bursts. Forwarded headers are ignored; a real reverse
+proxy needs an explicit trusted identity policy. Timed-out workers retain their
+slots until they exit, so future dependencies must honor cancellation.
 
-```sh
-make build
-python3 examples/smoke.py
-```
+Public deployments would additionally need HTTPS termination and appropriate
+operational controls. Authentication, durable storage, distributed quotas and
+email delivery are outside this stateless example. [Performance analysis](docs/PERFORMANCE_ANALYSIS.md)
+explains which follow-up measurements would justify adding them.
 
-## Decisions and limitations
+## Repository guide
 
-- A stateless calculator demonstrates contracts without collecting contact details
-  or guessing actual company workflows. No authentication claim is made.
-- Fixed-window quotas are per process, capped at 1,024 peer keys, and fail closed
-  for new peers when full. Restarts reset quotas. Boundary bursts are possible.
-- Forwarded headers are ignored. A reverse proxy would collapse clients into one
-  quota; configure a trusted edge deliberately before public deployment.
-- Public catalog freshness is bounded at 60s. Cache IDs can represent an origin
-  delivery; production edges may issue separate delivery correlation IDs.
-- Worker slots remain held after timeout until work actually stops. Cooperative
-  cancellation is mandatory for future dependencies.
-- No TLS termination, distributed quota, durable storage, identity provider,
-  telemetry backend, retries or deployment is included. See [ADRs](docs/RECOMMENDATIONS.md).
-- GitHub currently reports this repository as private. The owner approved making
-  it public, but the platform integration lacks repository-administration access.
-  Change visibility in repository Settings → Danger Zone before submitting the
-  link to reviewers. The implementation and checks
-  were also revalidated after cloud-environment restoration.
+| Path | Purpose |
+|---|---|
+| `cmd/server/` | HTTP server configuration, signals and shutdown |
+| `internal/api/` | Routes, validation, middleware, rate limiter and behavior tests |
+| `internal/service/` | Context-aware calculator and illustrative catalog |
+| `internal/config/` | Validated environment configuration |
+| `examples/smoke.py` | Local HTTP and graceful-shutdown verification |
+| `docs/` | Audit, evidence, API reference, diagrams, decisions and submission text |
 
-## Reports
-
-- [Audit report](docs/AUDIT_REPORT.md)
-- [Evidence and safe follow-up](docs/EVIDENCE.md)
-- [Security findings](docs/SECURITY_FINDINGS.md)
-- [Performance and reliability](docs/PERFORMANCE_ANALYSIS.md)
-- [Architecture diagrams](docs/ARCHITECTURE.md)
-- [Recommendations, traceability and ADRs](docs/RECOMMENDATIONS.md)
-- [Actual verification results](docs/VERIFICATION.md)
-- [Assessment submission text](docs/SUBMISSION.md)
-- [Requirement-by-requirement completion checklist](docs/COMPLETION_CHECKLIST.md)
-
-The public site identifies as Cynbit Technologies and lists the matching internship.
-The email did not supply a domain; independent ownership authentication is limited.
-The remaining work requires internal/staging access: server-side validation,
-delivery guarantees, retention, authenticated product authorization and capacity.
-No production vulnerability, database bottleneck or load-test result is claimed.
+Before sharing the repository URL, confirm reviewer access using the
+[submission checklist](docs/COMPLETION_CHECKLIST.md#before-portal-submission).

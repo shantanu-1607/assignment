@@ -1,73 +1,80 @@
 # Verification record
 
-Executed in the managed Linux amd64 environment on October 31, 2026 IST
-(October 30 UTC). These are reference-backend results, not Cynbit measurements.
+Reference-backend checks completed October 31, 2026 (IST), using **Go 1.27.3 on
+Linux amd64**. These results describe the local implementation, not Cynbit's
+production performance or security.
 
-## Toolchain and setup
+## Results
 
-- Go 1.27.3 linux/amd64, official archive from `dl.google.com`.
-- SHA-256 checked against HTTPS release metadata from `go.dev/dl/?mode=json`:
-  `65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40`.
-- No third-party Go modules. `go.mod` requires Go 1.24 or newer.
-- Toolchain installed outside the checkout at `/workspace/.tools/go`.
-- System `/usr/bin/go` is a board-game executable, not the compiler.
-- Default home cache is read-only; GOCACHE/GOPATH use `/workspace/.cache`.
-
-## Actual checks
-
-| Check | Outcome |
+| Check | Result |
 |---|---|
-| `gofmt` / Make formatting gate | Passed; no formatting differences |
+| Formatting (`gofmt` gate) | Passed |
 | `go vet ./...` | Passed |
-| `go test ./...` (JSON event capture) | Passed: 16 top-level tests; 39 test/subtest pass events; 0 failures/skips |
-| `go test -race ./...` via `make check` | Passed; all three tested packages; server command package has no unit tests |
-| `make build` | Passed; built `bin/server` (ignored) |
-| `python3 examples/smoke.py` | Passed real HTTP readiness, catalog, conditional 304, estimate result 7, validation 422, JSON 404 |
-| SIGTERM built server | Passed, graceful exit status 0 in smoke script |
-| Saved installation script's retained-toolchain path | Executed successfully; version gate and build passed |
+| `go test ./...` | 16 top-level tests; 39 pass events including subtests; 0 failures/skips |
+| `go test -race ./...` | Passed for all three tested packages; server command has no unit tests |
+| `make build` | Passed |
+| Real HTTP smoke check | Passed readiness, catalog, conditional 304, result 7, validation 422 and 404 |
+| SIGTERM shutdown | Passed with exit status 0 |
+| Documentation review | Local links, whitespace, finding/test references and submission word count checked |
+| Source/evidence review | Credential-pattern checks passed; cookie values and private data excluded |
 
-Initial failures were environmental: default Go cache was read-only, and the
-restricted command sandbox denied the live HTTP test's listening socket. After
-selecting writable caches and obtaining local socket execution permission, the
-ordinary and race suites passed. No tests were disabled or skipped to achieve
-this result. The initial run validated that instance; the later restored-machine check is
-recorded separately below.
+The review is not an exhaustive secret scan or a security certification. No tests
+were disabled to obtain passing results. No benchmark, production load test or
+authenticated product test was performed.
 
-The GitHub workflow runs formatting, vet, race tests, build and smoke checks on
-push/PR. Hosted run verification is recorded below. No benchmark, load test, production authentication
-check was performed. Public-site navigation was subsequently completed; see the
-separate evidence ledger for its scope and limits.
+## Hosted CI
 
-## Review boundaries
+GitHub [run 41115659636](https://github.com/shantanu-1607/assignment/actions/runs/41115659636)
+completed successfully for commit `38aae4b1180d49c381c4dd2f3484b8b529a0a8c7`.
+The workflow checked formatting, vet and race tests, then built and exercised the
+server. Earlier code/evidence milestone [run 41115164304](https://github.com/shantanu-1607/assignment/actions/runs/41115164304)
+also passed. These are recorded results for those commits; the workflow page shows
+subsequent runs.
 
-Tracked files were checked for accidental credential files, private-key/token
-patterns, whitespace errors and broken local documentation links. This manual and
-pattern-based review is not an exhaustive secret scanner or security audit.
-Generated binaries, environment files and logs are ignored. No co-author trailer
-was added. See [EVIDENCE](EVIDENCE.md) for the completed passive review and its limits.
+The workflow now uses the same `make smoke` entry point documented for reviewers.
+It builds the binary and runs `examples/smoke.py`, which owns its local process on
+port 18081 and stops that process after checking responses.
 
-## Published-environment revalidation
+## Reproduce
 
-After publication restored a new machine, `make check`, `make build`, and
-`python3 examples/smoke.py` were rerun successfully on October 31, 2026 IST.
-The check command reused valid cached Go test results where reported; the built
-server smoke check executed again. Public browser inspection used Chromium 154
-and the supplied proxy CA trusted in NSS, with certificate verification enabled.
-No prior network changes were reapplied and no environment publication was
-performed by the agent. Documentation links and whitespace were checked again.
+```sh
+make check
+make smoke
+```
 
-## Hosted CI and repository accessibility
+Requires Go, a C compiler for race detection, Make and Python 3. The tests and
+smoke script contact only local servers. The repository has no third-party Go
+modules, external service dependency or secret requirement.
 
-GitHub's API reports [run 41115164304](https://github.com/shantanu-1607/assignment/actions/runs/41115164304)
-completed successfully for commit `a0ec06d7772e36022e223e3274f056b70d49baee`.
-The individual `make check`, `make build`, and `python3 examples/smoke.py` steps
-all concluded success. This validates the code/evidence milestone in a hosted
-runner, beyond merely adding a workflow file.
+Public-site evidence is recorded separately in [EVIDENCE.md](EVIDENCE.md). The
+browser review used Chromium 154 with the supplied proxy CA trusted in NSS;
+TLS verification remained enabled. That review did not submit any forms.
 
-The repository API reports `private: true`, `visibility: private`, default branch
-`main`. Authenticated platform access does not establish anonymous/reviewer
-access. The owner explicitly approved public visibility. A PATCH requesting only
-`private: false` was rejected by GitHub with HTTP 403,
-`Resource not accessible by integration`. This is a repository-administration
-permission limitation, not a test failure or missing owner approval. The owner
-must make it public through GitHub settings before submitting a public link.
+## Cloud workspace notes
+
+The cloud toolchain is installed outside the checkout. To activate it:
+
+```sh
+export PATH=/workspace/.tools/go/bin:$PATH
+export GOCACHE=/workspace/.cache/go-build
+export GOPATH=/workspace/.cache/gopath
+cd /workspace/assignment
+make check
+make smoke
+```
+
+The official Go archive from `dl.google.com` was checked against HTTPS release
+metadata from `go.dev/dl/?mode=json`. SHA-256:
+
+```text
+65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40
+```
+
+Initial environment failures involved a read-only default cache and restricted
+local sockets. Selecting writable caches and permitting local socket execution
+resolved them. After environment restoration, build and smoke checks passed again;
+Go reused valid test-cache entries where reported. Live processes are restarted
+when needed rather than assumed to survive restoration.
+
+See the [submission checklist](COMPLETION_CHECKLIST.md#before-portal-submission)
+for reviewer-access status.

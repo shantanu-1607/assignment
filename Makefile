@@ -1,4 +1,4 @@
-.PHONY: run test check build
+.PHONY: run test check build smoke
 run:
 	go run ./cmd/server
 test:
@@ -9,3 +9,5 @@ check:
 	go test -race ./...
 build:
 	go build -trimpath -o bin/server ./cmd/server
+smoke: build
+	python3 examples/smoke.py

@@ -1,16 +1,16 @@
 # Assessment submission
 
-I reviewed Cynbit's public website through ordinary browser navigation, response
-headers, empty form schemas, and publicly loaded client code. The report separates
-observed Next.js/Vercel delivery behavior from unverified internal architecture.
-Key opportunities concern input-length contracts, Server Action exception recovery,
-response security headers, applicant data minimization, analytics-cookie review,
-and evidence-driven caching decisions. I did not submit forms, access private
-resources, exploit vulnerabilities, or run production load tests. A standalone Go
-reference API demonstrates strict validation, safe error contracts, request IDs,
-conditional caching, bounded rate/concurrency limits, cancellation, and graceful
-shutdown. Formatting, vet, ordinary tests, race detection, and real HTTP/shutdown
-smoke checks passed. The repository includes timestamped sanitized evidence,
-architecture diagrams, prioritized recommendations, engineering decisions, and a
-finding-to-code/test matrix. Internal authorization, retention, delivery and
-capacity controls remain explicitly outside this passive assessment.
+I reviewed Cynbit's public website using ordinary browser navigation, HTTP
+responses, empty form schemas and publicly loaded client code. The audit records
+Next.js/Vercel delivery behavior and identifies opportunities in form validation,
+Server Action error recovery, response security headers, applicant data
+minimization and analytics-cookie handling. Each finding includes evidence, its
+limits and a practical recommendation. I also built a standalone Go API to
+demonstrate strict JSON contracts, safe errors, request correlation, conditional
+caching, bounded rate and concurrency limits, cancellation and graceful shutdown.
+Formatting, vet, automated tests, race detection and real HTTP/shutdown checks
+passed locally, with hosted CI results documented. The repository includes
+sanitized evidence, architecture diagrams, implementation tradeoffs and a
+finding-to-test matrix. The review remained passive: no forms were submitted or
+private resources accessed. Internal authorization, retention and delivery
+controls require a separate authorized review.

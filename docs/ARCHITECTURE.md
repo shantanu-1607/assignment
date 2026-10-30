@@ -9,7 +9,7 @@ flowchart LR
   Edge --> Dynamic[Careers and blog: no-store responses]
   Browser --> Assets[Next.js assets and RSC prefetch]
   Assets --> Forms[Contact / demo / newsletter client code]
-  Forms -. referenced actions; not invoked .-> Actions[Server Actions boundary]
+  Forms -. referenced actions only .-> Actions[Server Actions boundary]
   Actions -. internals unverified .-> Unknown[Validation / storage / delivery unknown]
   Policy[Privacy-policy disclosure] -. disclosure only .-> Providers[Resend and Prisma]
 ```
@@ -28,7 +28,7 @@ flowchart LR
   Validate --> Domain[Application operation]
   Domain --> Public[Explicitly public cacheable reads]
   Domain -. only for real delivery needs .-> Queue[Durable job acceptance]
-  Queue -. bounded worker; proposed .-> Email[Email provider]
+  Queue -. proposed bounded worker .-> Email[Email provider]
   Boundary --> Telemetry[Sanitized logs / status and duration metrics]
 ```
 
