@@ -34,8 +34,7 @@ this result. The initial run validated that instance; the later restored-machine
 recorded separately below.
 
 The GitHub workflow runs formatting, vet, race tests, build and smoke checks on
-push/PR. Its hosted result is **unverified locally**; adding a workflow is not proof
-that GitHub Actions ran it. No benchmark, load test, production authentication
+push/PR. Hosted run verification is recorded below. No benchmark, load test, production authentication
 check was performed. Public-site navigation was subsequently completed; see the
 separate evidence ledger for its scope and limits.
 
@@ -56,4 +55,19 @@ server smoke check executed again. Public browser inspection used Chromium 154
 and the supplied proxy CA trusted in NSS, with certificate verification enabled.
 No prior network changes were reapplied and no environment publication was
 performed by the agent. Documentation links and whitespace were checked again.
-The hosted GitHub Actions outcome remains unverified.
+
+## Hosted CI and repository accessibility
+
+GitHub's API reports [run 41115164304](https://github.com/shantanu-1607/assignment/actions/runs/41115164304)
+completed successfully for commit `a0ec06d7772e36022e223e3274f056b70d49baee`.
+The individual `make check`, `make build`, and `python3 examples/smoke.py` steps
+all concluded success. This validates the code/evidence milestone in a hosted
+runner, beyond merely adding a workflow file.
+
+The repository API reports `private: true`, `visibility: private`, default branch
+`main`. Authenticated platform access does not establish anonymous/reviewer
+access. The owner explicitly approved public visibility. A PATCH requesting only
+`private: false` was rejected by GitHub with HTTP 403,
+`Resource not accessible by integration`. This is a repository-administration
+permission limitation, not a test failure or missing owner approval. The owner
+must make it public through GitHub settings before submitting a public link.

@@ -13,7 +13,7 @@ database or third-party services required.
 ## Five-minute review
 
 1. Read the [audit summary and scope](docs/AUDIT_REPORT.md).
-2. Inspect the [conditional findings](docs/SECURITY_FINDINGS.md) and
+2. Inspect the [findings and recommendations](docs/SECURITY_FINDINGS.md) and
    [evidence-to-code matrix](docs/RECOMMENDATIONS.md).
 3. Run `make check`, then `make run` and the requests below.
 4. Read the [architecture](docs/ARCHITECTURE.md) and
@@ -149,8 +149,11 @@ python3 examples/smoke.py
   cancellation is mandatory for future dependencies.
 - No TLS termination, distributed quota, durable storage, identity provider,
   telemetry backend, retries or deployment is included. See [ADRs](docs/RECOMMENDATIONS.md).
-- Public source visibility and fresh-environment restoration are not guaranteed
-  merely by pushing a repository. Confirm repository access before submission.
+- GitHub currently reports this repository as private. The owner approved making
+  it public, but the platform integration lacks repository-administration access.
+  Change visibility in repository Settings → Danger Zone before submitting the
+  link to reviewers. The implementation and checks
+  were also revalidated after cloud-environment restoration.
 
 ## Reports
 
@@ -162,6 +165,7 @@ python3 examples/smoke.py
 - [Recommendations, traceability and ADRs](docs/RECOMMENDATIONS.md)
 - [Actual verification results](docs/VERIFICATION.md)
 - [Assessment submission text](docs/SUBMISSION.md)
+- [Requirement-by-requirement completion checklist](docs/COMPLETION_CHECKLIST.md)
 
 The public site identifies as Cynbit Technologies and lists the matching internship.
 The email did not supply a domain; independent ownership authentication is limited.
