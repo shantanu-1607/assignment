@@ -1,0 +1,634 @@
+{
+  "scope": "Ordinary public navigation; no form submissions or authenticated requests",
+  "pages": [
+    {
+      "time_utc": "2026-10-30T19:19:49Z",
+      "url": "https://www.cynbit.in/",
+      "status": 200,
+      "forms": [],
+      "document_response": {
+        "path": "/",
+        "method": "GET",
+        "resource_type": "document",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "etag": "W/\"babdce9795e4ef3d84461090987852d3\"",
+          "age": "108453",
+          "strict-transport-security": "max-age=63072000",
+          "access-control-allow-origin": "*",
+          "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+          "x-vercel-cache": "HIT",
+          "x-nextjs-prerender": "1",
+          "x-matched-path": "/"
+        }
+      },
+      "same_site_response_count_including_prefetch": 43
+    },
+    {
+      "time_utc": "2026-10-30T19:19:51Z",
+      "url": "https://www.cynbit.in/services",
+      "status": 200,
+      "forms": [],
+      "document_response": {
+        "path": "/services",
+        "method": "GET",
+        "resource_type": "document",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "etag": "W/\"c23fc90c848362d61a90ee5132fac2b2\"",
+          "age": "108362",
+          "strict-transport-security": "max-age=63072000",
+          "access-control-allow-origin": "*",
+          "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+          "x-vercel-cache": "HIT",
+          "x-nextjs-prerender": "1",
+          "x-matched-path": "/services"
+        }
+      },
+      "same_site_response_count_including_prefetch": 42
+    },
+    {
+      "time_utc": "2026-10-30T19:19:53Z",
+      "url": "https://www.cynbit.in/products",
+      "status": 200,
+      "forms": [
+        {
+          "action": null,
+          "method": null,
+          "fields": [
+            {
+              "tag": "INPUT",
+              "type": "text",
+              "name": "fullName",
+              "required": true,
+              "maxLength": -1,
+              "min": "",
+              "max": "",
+              "pattern": ""
+            },
+            {
+              "tag": "INPUT",
+              "type": "email",
+              "name": "email",
+              "required": true,
+              "maxLength": -1,
+              "min": "",
+              "max": "",
+              "pattern": ""
+            },
+            {
+              "tag": "INPUT",
+              "type": "text",
+              "name": "company",
+              "required": true,
+              "maxLength": -1,
+              "min": "",
+              "max": "",
+              "pattern": ""
+            },
+            {
+              "tag": "TEXTAREA",
+              "type": "textarea",
+              "name": "message",
+              "required": true,
+              "maxLength": -1,
+              "min": null,
+              "max": null,
+              "pattern": null
+            }
+          ],
+          "buttons": [
+            "rocket_launchStudiocheck",
+            "apartmentTenantEase",
+            "hubRevio",
+            "Request Studio Demoeast"
+          ]
+        }
+      ],
+      "document_response": {
+        "path": "/products",
+        "method": "GET",
+        "resource_type": "document",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "etag": "W/\"b90dfe45745d0290688b1070e3c493b8\"",
+          "age": "108382",
+          "strict-transport-security": "max-age=63072000",
+          "access-control-allow-origin": "*",
+          "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+          "x-vercel-cache": "HIT",
+          "x-nextjs-prerender": "1",
+          "x-matched-path": "/products"
+        }
+      },
+      "same_site_response_count_including_prefetch": 43
+    },
+    {
+      "time_utc": "2026-10-30T19:19:55Z",
+      "url": "https://www.cynbit.in/contact",
+      "status": 200,
+      "forms": [
+        {
+          "action": null,
+          "method": null,
+          "fields": [
+            {
+              "tag": "INPUT",
+              "type": "text",
+              "name": "fullName",
+              "required": true,
+              "maxLength": -1,
+              "min": "",
+              "max": "",
+              "pattern": ""
+            },
+            {
+              "tag": "INPUT",
+              "type": "email",
+              "name": "email",
+              "required": true,
+              "maxLength": -1,
+              "min": "",
+              "max": "",
+              "pattern": ""
+            },
+            {
+              "tag": "INPUT",
+              "type": "text",
+              "name": "company",
+              "required": false,
+              "maxLength": -1,
+              "min": "",
+              "max": "",
+              "pattern": ""
+            },
+            {
+              "tag": "INPUT",
+              "type": "text",
+              "name": "industry",
+              "required": false,
+              "maxLength": -1,
+              "min": "",
+              "max": "",
+              "pattern": ""
+            },
+            {
+              "tag": "TEXTAREA",
+              "type": "textarea",
+              "name": "message",
+              "required": true,
+              "maxLength": -1,
+              "min": null,
+              "max": null,
+              "pattern": null
+            }
+          ],
+          "buttons": [
+            "Send Inquiry"
+          ]
+        }
+      ],
+      "document_response": {
+        "path": "/contact",
+        "method": "GET",
+        "resource_type": "document",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "etag": "W/\"iuqg0l21p91ded\"",
+          "age": "3601",
+          "strict-transport-security": "max-age=63072000",
+          "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+          "x-vercel-cache": "HIT",
+          "x-nextjs-prerender": "1",
+          "x-matched-path": "/contact"
+        }
+      },
+      "same_site_response_count_including_prefetch": 42
+    },
+    {
+      "time_utc": "2026-10-30T19:19:57Z",
+      "url": "https://www.cynbit.in/careers",
+      "status": 200,
+      "forms": [],
+      "document_response": {
+        "path": "/careers",
+        "method": "GET",
+        "resource_type": "document",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+          "age": "0",
+          "strict-transport-security": "max-age=63072000",
+          "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+          "x-vercel-cache": "MISS",
+          "x-matched-path": "/careers"
+        }
+      },
+      "same_site_response_count_including_prefetch": 43
+    },
+    {
+      "time_utc": "2026-10-30T19:19:59Z",
+      "url": "https://www.cynbit.in/privacy",
+      "status": 200,
+      "forms": [],
+      "document_response": {
+        "path": "/privacy",
+        "method": "GET",
+        "resource_type": "document",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "public, max-age=0, must-revalidate",
+          "etag": "W/\"224cb7aa815dfd33a56b7487e3a40657\"",
+          "age": "101812",
+          "strict-transport-security": "max-age=63072000",
+          "access-control-allow-origin": "*",
+          "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+          "x-vercel-cache": "HIT",
+          "x-nextjs-prerender": "1",
+          "x-matched-path": "/privacy"
+        }
+      },
+      "same_site_response_count_including_prefetch": 44
+    },
+    {
+      "time_utc": "2026-10-30T19:20:02Z",
+      "url": "https://www.cynbit.in/blog",
+      "status": 200,
+      "forms": [
+        {
+          "action": null,
+          "method": null,
+          "fields": [
+            {
+              "tag": "INPUT",
+              "type": "text",
+              "name": "q",
+              "required": false,
+              "maxLength": -1,
+              "min": "",
+              "max": "",
+              "pattern": ""
+            }
+          ],
+          "buttons": []
+        },
+        {
+          "action": null,
+          "method": null,
+          "fields": [
+            {
+              "tag": "INPUT",
+              "type": "email",
+              "name": "email",
+              "required": true,
+              "maxLength": -1,
+              "min": "",
+              "max": "",
+              "pattern": ""
+            }
+          ],
+          "buttons": [
+            "Subscribesend"
+          ]
+        }
+      ],
+      "document_response": {
+        "path": "/blog",
+        "method": "GET",
+        "resource_type": "document",
+        "status": 200,
+        "headers": {
+          "content-type": "text/html; charset=utf-8",
+          "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+          "age": "0",
+          "strict-transport-security": "max-age=63072000",
+          "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+          "x-vercel-cache": "MISS",
+          "x-matched-path": "/blog"
+        }
+      },
+      "same_site_response_count_including_prefetch": 50
+    }
+  ],
+  "cookies_without_values": [
+    {
+      "name": "_ga",
+      "domain": ".cynbit.in",
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_gcl_au",
+      "domain": ".cynbit.in",
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga_LK6CQWCWX0",
+      "domain": ".cynbit.in",
+      "path": "/",
+      "secure": false,
+      "httpOnly": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "client_assets": [
+    {
+      "url": "https://www.cynbit.in/_next/static/chunks/app/(marketing)/blog/page-390d4846a05713eb.js",
+      "bytes": 7523,
+      "sha256": "fd09545edb73dfa62f9d451a35192c88fe47ec33b1ac49a532357e0df3456ef8"
+    },
+    {
+      "url": "https://www.cynbit.in/_next/static/chunks/app/(marketing)/contact/page-a581c8d7462124d9.js",
+      "bytes": 24534,
+      "sha256": "98e8032a1357297428d7bbcd0964394955339d5ee8a67b2895a637f671b9de83"
+    },
+    {
+      "url": "https://www.cynbit.in/_next/static/chunks/app/(marketing)/products/page-637d1c81fb1ea500.js",
+      "bytes": 43981,
+      "sha256": "24493a68364adee2ae67cba62c471e7fe12e8e39fc2c328c61721e160894ca61"
+    }
+  ],
+  "ordinary_navigation_rsc_samples": [
+    {
+      "path": "/services",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "etag": "W/\"ef27ef4ec417befc7aaa4b9603f4594f\"",
+        "age": "108467",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "HIT",
+        "x-nextjs-prerender": "1",
+        "x-matched-path": "/services.rsc"
+      }
+    },
+    {
+      "path": "/team",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "etag": "W/\"f22abf30ec4cd5a3493b9e6548b1cc7f\"",
+        "age": "108467",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "HIT",
+        "x-nextjs-prerender": "1",
+        "x-matched-path": "/team.rsc"
+      }
+    },
+    {
+      "path": "/impact",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "etag": "W/\"40d16599f0199abed89dfe932a06ef4f\"",
+        "age": "108467",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "HIT",
+        "x-nextjs-prerender": "1",
+        "x-matched-path": "/impact.rsc"
+      }
+    },
+    {
+      "path": "/story",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "etag": "W/\"655ad7fbaeae928cc5d4c00c1937f5e3\"",
+        "age": "108467",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "HIT",
+        "x-nextjs-prerender": "1",
+        "x-matched-path": "/story.rsc"
+      }
+    },
+    {
+      "path": "/careers",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "age": "0",
+        "strict-transport-security": "max-age=63072000",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "MISS",
+        "x-matched-path": "/careers.rsc"
+      }
+    },
+    {
+      "path": "/products",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "etag": "W/\"4a0e0d125a6f7c2f8778102d66f482ae\"",
+        "age": "108467",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "HIT",
+        "x-nextjs-prerender": "1",
+        "x-matched-path": "/products.rsc"
+      }
+    },
+    {
+      "path": "/case-studies",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "age": "0",
+        "strict-transport-security": "max-age=63072000",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "MISS",
+        "x-matched-path": "/case-studies.rsc"
+      }
+    },
+    {
+      "path": "/diaries",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "age": "0",
+        "strict-transport-security": "max-age=63072000",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "MISS",
+        "x-matched-path": "/diaries.rsc"
+      }
+    },
+    {
+      "path": "/bitelevate/paths",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "etag": "W/\"8f4978b4a7f017aa689fce6c6aa86e04\"",
+        "age": "108466",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "HIT",
+        "x-nextjs-prerender": "1",
+        "x-matched-path": "/bitelevate/paths.rsc"
+      }
+    },
+    {
+      "path": "/blog",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "age": "0",
+        "strict-transport-security": "max-age=63072000",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "MISS",
+        "x-matched-path": "/blog.rsc"
+      }
+    },
+    {
+      "path": "/bitelevate",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "etag": "W/\"1e3212df1a02acc04f8ed028a52fd8cf\"",
+        "age": "108467",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "HIT",
+        "x-nextjs-prerender": "1",
+        "x-matched-path": "/bitelevate.rsc"
+      }
+    },
+    {
+      "path": "/contact",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "age": "3608",
+        "strict-transport-security": "max-age=63072000",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "HIT",
+        "x-nextjs-prerender": "1",
+        "x-matched-path": "/contact.rsc"
+      }
+    },
+    {
+      "path": "/blog/ai-agents-business-operations",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "age": "0",
+        "strict-transport-security": "max-age=63072000",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "MISS",
+        "x-matched-path": "/blog/[slug].rsc"
+      }
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "public, max-age=0, must-revalidate",
+        "etag": "W/\"959144b2d2a1a47a6a5a2f0b1f745adc\"",
+        "age": "108463",
+        "strict-transport-security": "max-age=63072000",
+        "access-control-allow-origin": "*",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "HIT",
+        "x-nextjs-prerender": "1",
+        "x-matched-path": "/index.rsc"
+      }
+    },
+    {
+      "path": "/blog/future-saas-development",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "age": "0",
+        "strict-transport-security": "max-age=63072000",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "MISS",
+        "x-matched-path": "/blog/[slug].rsc"
+      }
+    },
+    {
+      "path": "/blog/best-automation-tools-2026",
+      "method": "GET",
+      "resource_type": "fetch",
+      "status": 200,
+      "headers": {
+        "content-type": "text/x-component",
+        "cache-control": "private, no-cache, no-store, max-age=0, must-revalidate",
+        "age": "0",
+        "strict-transport-security": "max-age=63072000",
+        "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+        "x-vercel-cache": "MISS",
+        "x-matched-path": "/blog/[slug].rsc"
+      }
+    }
+  ],
+  "same_site_non_rsc_xhr_fetch_count": 0
+}

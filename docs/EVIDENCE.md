@@ -1,66 +1,85 @@
-# Evidence ledger
+# Public evidence ledger
 
-## Scope and collection rules
+## Method and scope
 
-Assessment: Cynbit, Backend Developer Intern. Collection attempted 2026-10-31
-00:28–00:35 IST (2026-10-30 18:58–19:05 UTC). These times describe the research
-session, not a target-server observation. Only public navigation and a single
-homepage/header request were attempted. No scanning, enumeration, submissions,
-authenticated requests, load generation, or crafted attack inputs were used.
+Public navigation completed October 31, 2026, approximately **00:47–00:52 IST**
+(October 30, 19:17–19:22 UTC). Sources: verified-TLS curl and Chromium 154 through
+the environment's configured proxy. The supplied proxy CA was imported into the
+browser's NSS trust store; certificate verification was not disabled. Browser
+prefetching generated ordinary Next.js RSC requests automatically.
 
-| ID | Source and method | Result | Supported conclusion | Limits |
-|---|---|---|---|---|
-| E-001 | Candidate `https://cynbit.com/`, curl HEAD through inherited proxy | CONNECT rejected with HTTP 403 by environment proxy | Research access was blocked before origin TLS/HTTP | Does **not** establish that this domain is official, reachable, insecure, or unavailable |
-| E-002 | Public search `https://www.google.com/search?q=Cynbit+official+website`, ordinary GET | CONNECT rejected with HTTP 403 | Independent company/domain corroboration unavailable | No search results were received |
-| E-003 | Candidate homepage ordinary GET after saving draft allowlist additions | CONNECT rejected with HTTP 403 | Draft saving had not enabled runtime access | No HTML, cookies, API payloads or origin headers collected |
+No forms were submitted, accounts created, private resources accessed, endpoint
+lists guessed, attacks crafted, or load tests run. No production errors were
+intentionally triggered. Navigation included homepage, services, products,
+contact, careers, privacy, blog, cookie policy, the linked backend internship,
+and the blog's linked second page. Passive inspection included the exact public
+JavaScript assets loaded for contact/products/blog.
 
-Sanitized proxy excerpt (E-001):
+[Structured observations](evidence/public-observations.json) preserve collection
+times, selected response headers, empty form schemas, cookie attributes **without
+values**, and client-asset hashes. Query strings, cookie values, authentication
+headers and full HARs are deliberately excluded. This is a sanitized evidence
+selection, not a complete traffic archive. Historic network failures are retained
+separately in [research history](evidence/RESEARCH_HISTORY.md); they no longer block
+this review and are not findings about the company.
 
-```text
-HTTP/1.1 403 Forbidden
-server: envoy
-curl: (56) CONNECT tunnel failed, response 403
+## Company and domain selection
+
+| ID | Source / method | Observation | Conclusion and limit |
+|---|---|---|---|
+| E-005 | [Homepage](https://www.cynbit.in/), GET + rendered page; 19:17:54 and 19:19:49 UTC | Title identifies Cynbit Technologies, AI automation/software solutions in Jaipur; links to `/services`, `/products`, `/careers` and LinkedIn `/company/cynbit-in/` | Strong public brand/domain match to the user-suggested site; the assessment email did not supply a URL, so employer ownership is not independently authenticated |
+| E-006 | [Services](https://www.cynbit.in/services) and [products](https://www.cynbit.in/products), rendered navigation, 19:19:51–53 UTC | Advertises AI agents, backend/cloud development; names Cynbit Studio, TenantEase and Revio | Product context is observed marketing content, not verification of deployed features, uptime or claimed scale |
+| E-007 | [Careers](https://www.cynbit.in/careers), 19:19:57 UTC; [linked internship](https://www.cynbit.in/careers/backend-developer-intern), 19:21–22 UTC | Backend Developer Intern role matches the assignment; role mentions REST/GraphQL, auth, databases and Go/Node/Python | Corroborates assessment relevance; does not prove those technologies are currently deployed |
+
+A normal request to the homepage-linked LinkedIn profile returned status 999.
+No attempt was made to bypass it. Public Google search did not yield usable
+independent corroboration. The report reviews the matching publicly identified
+site, with this identity limitation stated rather than hidden.
+
+## Backend and control observations
+
+| ID | Resource / method and timestamp UTC | What was observed | Reasonable conclusion / limit |
+|---|---|---|---|
+| E-008 | Seven main document responses and ordinary navigation, 19:19:49–19:20:02 | `/_next/static/...` assets; `text/x-component` fetches; `x-nextjs-prerender: 1` and `x-vercel-cache` on sampled public pages | Next.js/RSC frontend and Vercel caching indicators; no backend language, database or product-service topology established |
+| E-009 | Home/services/products/contact/privacy document headers, same interval | 200, `public, max-age=0, must-revalidate`; ETags; Vercel HIT; homepage age 108453, contact age 3601 | Public caching is already present; Age describes cached response age, not database freshness or response latency |
+| E-010 | Careers/blog document headers, 19:19:57 and 19:20:02 | 200, `private, no-cache, no-store, max-age=0, must-revalidate`, Vercel MISS, age 0 | Different cache treatment is observed; whether deliberate freshness or unnecessary dynamic rendering requires internal evidence |
+| E-011 | Same seven document responses | HSTS `max-age=63072000`; no CSP, X-Frame-Options, X-Content-Type-Options or Referrer-Policy response header captured | Hardening opportunity scoped to sampled documents; no exploit or global absence established. HTML meta policies, browser defaults and product subdomains need separate review |
+| E-012 | Contact and product-demo DOM, 19:19:53–55; [empty form screenshot](evidence/contact-form.png) | Required text/email/message fields; `maxLength: -1`; products also requires company; contact company/industry optional | Client has no HTML length cap; server-side size/schema validation remains unknown |
+| E-013 | Exact browser-loaded contact/products/blog route bundles, fetched around 19:20 UTC; URLs and SHA-256 in structured evidence | References `submitInquiry`, `submitServiceLead`, `subscribeToNewsletter`; public client functions await these actions, branching on `success`; no local try/catch/finally around those awaits in inspected functions | Server Action integration, not a discovered REST API. Exception recovery gap is inferred from client code; no failed production submission was performed |
+| E-014 | Linked internship page, ordinary GET 200, 19:21–22 UTC; privacy page | Application labels require DOB, gender (with “Prefer not to say”), permanent address, phone and WhatsApp in addition to career details. Privacy page broadly describes minimum name/email/professional-context collection | Specific data-minimization and purpose/retention review opportunity; no actual applicant data viewed, retention measured, or legal violation asserted |
+| E-015 | Fresh browser context, after ordinary navigation; cookie policy read 19:20–21 UTC | `_ga`, `_ga_LK6CQWCWX0`, `_gcl_au`; Secure=false, HttpOnly=false, SameSite=Lax. No consent choice was made. Policy describes analytics and browser controls | Review analytics loading/consent and inventory; these are not proven authentication cookies. JS analytics cookies lacking HttpOnly is not itself an auth defect; no jurisdictional compliance conclusion |
+| E-016 | Blog first page and linked `?page=2`, 200, 19:20–22 UTC | Page/category query links; second page shows a different article set. Captured same-site fetches in initial seven-page review were RSC, with zero non-RSC XHR/fetch JSON responses | Visible URL pagination exists; cannot infer SQL offset, database query efficiency, private API envelopes or maximum page enforcement |
+| E-017 | [Privacy policy](https://www.cynbit.in/privacy), rendered text, 19:19:59 | Names Resend for email delivery and Prisma for database management | Company disclosure, not independently verified deployment architecture; Prisma is tooling, not identification of the database engine |
+
+Selected header excerpt (homepage browser response):
+
+```http
+HTTP 200
+content-type: text/html; charset=utf-8
+cache-control: public, max-age=0, must-revalidate
+etag: W/"babdce9795e4ef3d84461090987852d3"
+age: 108453
+strict-transport-security: max-age=63072000
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+x-vercel-cache: HIT
+x-nextjs-prerender: 1
 ```
 
-This is intermediary evidence, **not a Cynbit response**. No raw cookie, token,
-credential or personal data was captured. The official site, company products,
-backend technology, APIs and authentication flows remain **unverified**. This
-report is an explicitly bounded assessment package, not a completed website audit.
+Some public prerendered documents also returned `Access-Control-Allow-Origin: *`.
+This was not observed on an authenticated API response; do not label public HTML
+CORS as a credential-exposure vulnerability. `server: envoy` can be intermediary
+metadata and is not used to infer the origin web server.
 
-## Candidate domain supplied by requester
+Client behavior excerpt, normalized from E-013 (action IDs deliberately omitted):
 
-On October 31, 2026 IST, the requester clarified that the assessment email
-contained no website and suggested `https://www.cynbit.in/`. This is a better
-research lead than the initial guessed `.com` domain, but it is not independent
-confirmation of company identity. The `.com` requests above are retained only as
-historical unsuccessful research attempts, not as a claimed company association.
+```js
+// Contact: simplified control flow, not source formatting.
+preventDefault(); setPending(true); clearError();
+const result = await submitInquiry(new FormData(form));
+setPending(false);
+if (result.success) showSuccess(); else showGenericError();
+```
 
-| ID | Source and method | Result | Supported conclusion | Limits |
-|---|---|---|---|---|
-| E-004 | User-suggested `https://www.cynbit.in/`; one ordinary HTTPS GET through the configured proxy, October 31, 2026 at 00:41:20 IST (October 30 at 19:11:20 UTC) | CONNECT rejected with HTTP 403; curl exit 56 | Active environment policy still blocks candidate-site research | No origin response, company identity, products, API, cookies or headers verified |
-
-The response timestamp is the local completion time, not an origin timestamp.
-`cynbit.in` and `www.cynbit.in` were added to the environment configuration draft,
-preserving its existing domains. Saving that draft does not activate the running
-network policy. Review/save the settings and publish the environment through the
-product before retrying; do not bypass the proxy or substitute third-party fetch
-services. If normal navigation redirects to another domain, inspect the redirect
-and request only the necessary supported policy addition.
-
-## Safe completion procedure once access is available
-
-1. Corroborate the official domain using the employer's assessment link and an
-   independently linked company profile. Record URLs, timestamps and supporting text.
-2. Open only public homepage and normally linked product/contact/login pages.
-   Record a small representative navigation in browser developer tools. Do not
-   submit forms or authenticate without permission.
-3. Record status, redirect chain, content type, cache headers, transfer size,
-   security headers, and cookie attributes without their values. Sanitize any HAR
-   before storing; never commit authorization headers, cookies or personal data.
-4. Record only API calls generated by that navigation. Analyze methods, status,
-   envelope, pagination and error behavior actually seen. Do not guess endpoints
-   or deliberately generate production errors.
-5. Link each observation to resource, method, time and sanitized excerpt. Label
-   unknown server-side controls unknown. One request is not a latency benchmark.
-6. Reprioritize the recommendations using collected evidence; replace conditional
-   applicability with confirmed scope only where supported.
+An exception would bypass the normal reset in this function unless another layer
+recovers it. That is a reason to add local recovery, not a claim that real users
+have experienced a stuck form.
