@@ -1,48 +1,60 @@
-# Performance and reliability analysis
+# Performance and reliability
 
-No origin measurements were possible. Proxy rejections are excluded from latency
-analysis. No Cynbit bottleneck, query pattern, N+1 problem, missing pool or slow
-endpoint is asserted. Local tests validate behavior, not production capacity.
+## Observed public behavior
 
-## Proposed controls
+E-008–E-010 show a useful existing baseline: Next.js assets/RSC delivery and Vercel
+HITs for sampled marketing pages. Home, services, products, contact and privacy
+returned ETags and `public, max-age=0, must-revalidate`. Careers/blog returned
+`private, no-cache, no-store, max-age=0, must-revalidate`, age 0 and MISS.
 
-**F-002: bounded work.** A 4 KiB request body, 16 KiB header budget, 32 active
-handler slots and a per-peer fixed window of 60 requests/minute bound representative
-resources. The limiter stores at most 1,024 peer records. Expired records are
-reclaimed on admission when full, under one mutex. Saturated tables reject new
-peers; fixed windows can permit twice the limit across a window boundary. These
-are deliberate demo tradeoffs, not a DDoS defense. A trusted edge, global quotas
-and per-identity policies are needed at scale.
+Browser freshness at max-age=0 requires revalidation; it does not mean the origin
+is recomputing every request. A homepage Age of 108453 describes shared response
+age, not latency or stale database records. `x-nextjs-stale-time` and
+`x-nextjs-prerender` are framework metadata, not universal HTTP cache guarantees.
 
-**F-003: immutable public caching.** The catalog is serialized once, with SHA-256
-ETag computed over those bytes. HEAD shares GET headers and sends no body. Weak
-or strong If-None-Match validators and wildcard yield empty 304 responses on a
-match. Max-age=60 allows bounded staleness; must-revalidate prevents stale reuse
-once freshness expires without validation. Updating code updates the representation
-and validator on restart. No cache invalidation service or database exists.
+The initial curl homepage body was 100,498 bytes. This is one retrieved HTML
+representation, not compressed wire size or a performance budget measurement.
+The seven-page browser session captured 307 same-site responses including assets
+and automatic linked-page prefetches. That count is a research-session artifact,
+not 307 API calls per user or a load benchmark. Ordinary fetch/XHR responses in
+this capture were RSC, not business JSON. Blog page/category links and different
+second-page articles are visible (E-016); SQL pagination and query plans are unknown.
 
-**F-004: lifecycle budgets.** The server has 5s header, 10s read and 60s idle
-limits; write timeout exceeds application deadline by 10s. Application work gets
-a 2s context budget by default. Go's timeout wrapper buffers the small response,
-returns 503 on deadline and cancels work. Slots release when work exits, not when
-the HTTP deadline fires: noncooperative dependencies cannot create unbounded
-background execution. Go cannot kill stuck goroutines; a stuck worker can occupy
-a slot indefinitely. Domain and future outbound calls must honor context.
-Readiness becomes unavailable during shutdown, liveness stays available; the
-server allows 10s to drain then closes active connections. Open connections and
-processes must be restarted after environment restoration.
+## Prioritized recommendations
 
-## Conditional scaling recommendations
-
-| Trigger to measure first | Recommendation | Tradeoff |
+| ID | Recommendation | What must be measured / verified |
 |---|---|---|
-| Repeated unchanged public data | Shared edge cache with explicit invalidation/freshness | Lower origin load versus staleness |
-| Multiple API replicas / proxy ingress | Edge/global limiter and trusted identity mapping | Consistent quotas versus infrastructure/failure dependency |
-| Actual database-backed reads | Bound result sizes; measure query plans; reuse capped connection pools | Throughput versus memory, connections and queueing |
-| External dependency failures | Per-call deadlines; bounded retries only for safe/idempotent operations; jitter | Recovery versus amplified load and tail latency |
-| Latency or availability objectives | Status/duration metrics, traces, error budgets and load tests on authorized staging | Diagnostic value versus operational cost and data retention |
+| F-003 | Preserve public cache validators; review dynamic careers/blog render policy | Content update frequency, personalization and acceptable freshness; no-store may be intentional |
+| F-003 | Profile RSC prefetch and HTML/JS transfer on representative mobile navigation | Transferred compressed bytes, cache reuse, route conversion and user latency; do not remove prefetch just because requests are visible |
+| F-002 | Bound mutation work and protect email/provider budgets | Actual action quotas, request size/time limits, concurrency and provider failure behavior |
+| F-004 | Recover action exceptions and correlate failures | Rejected transport/provider calls in authorized staging; no production failure was triggered |
+| F-004 | Introduce status/duration metrics and trace IDs if missing internally | Existing telemetry and retention policy; lack of public metrics is not proof they are absent |
 
-No retries or connection pools were added to a calculator with no outbound calls.
-No benchmark is included: nanosecond arithmetic throughput would not establish
-readiness for Cynbit's unknown workload. Use representative authorized staging
-load only after actual architecture, targets and traffic are known.
+## Reference implementation: explicit bounds
+
+- 4 KiB body, 16 KiB configured header budget, 32 active worker slots.
+- 60 requests/minute per socket peer, at most 1,024 quota keys. Fixed windows allow
+  boundary bursts; full tables reject new peers and expired keys are reclaimed.
+- 2s application context deadline; server header/read/idle limits 5s/10s/60s;
+  write budget exceeds the application deadline by 10s.
+- Worker slots release on actual worker exit. A timeout does not create unlimited
+  detached work. Go cannot forcibly kill a goroutine; future dependencies must
+  honor cancellation or stuck workers can exhaust slots.
+- Immutable pre-serialized catalog, SHA-256 ETag, conditional GET/HEAD, max-age=60
+  and must-revalidate. Code changes update content/validator on restart. Errors
+  and calculations use no-store; cacheable JSON excludes per-request IDs.
+- Readiness becomes unavailable during shutdown; liveness stays available. SIGTERM
+  allows 10s to drain before forced close. Tests and real smoke checks cover it.
+
+## Conditional internal architecture work
+
+No database or pool was observed. Review capped connection reuse, result sizes,
+indexes and query plans only against actual slow paths. Privacy text's reference
+to Prisma is not evidence of N+1 queries. If reliable email handoff is required,
+use durable job acceptance and provider delivery state; do not promise delivery
+on an uncommitted background goroutine. Introduce idempotency and bounded retries
+only with clear mutation/provider semantics; blind retries can duplicate inquiries.
+
+No benchmark or authorized production load test was run. Calculator throughput
+would not establish Cynbit capacity. Measure real staging workloads and service
+objectives before adding distributed caches, queues or microservices.

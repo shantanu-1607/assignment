@@ -4,13 +4,11 @@ An evidence-bounded technical report and a standalone Go reference API for the
 Cynbit Backend Developer Intern assessment. Standard library only; no credentials,
 database or third-party services required.
 
-> **Review status:** the reference implementation is runnable. The company-specific
-> website audit is incomplete: public research was blocked by the environment's
-> outbound proxy, and the official domain remains unverified. No target-origin
-> headers, API payloads, vulnerabilities or performance results are asserted.
-> The requester suggested `https://www.cynbit.in/`; its homepage request was also
-> blocked before origin access. See the [evidence ledger](docs/EVIDENCE.md) before
-> interpreting any recommendation.
+> **Review status:** public-site review and the Go reference are complete within
+> the passive scope. Browser navigation, headers, empty form schemas and public
+> client code were inspected at `https://www.cynbit.in/`. No forms were submitted
+> or private/authenticated workflows tested. Read the [evidence ledger](docs/EVIDENCE.md)
+> for timestamps, sources and the remaining identity/internal-system limitations.
 
 ## Five-minute review
 
@@ -22,7 +20,11 @@ database or third-party services required.
    [performance tradeoffs](docs/PERFORMANCE_ANALYSIS.md).
 
 Assessment deadline supplied by the requester: November 1, 2026, 10:01 AM IST.
-This package intentionally favors verifiable behavior over fabricated research.
+Public review completed October 31, 2026 IST. Key observations: Next.js/RSC and
+Vercel cache indicators; no HTML length caps on inquiry/demo fields; sampled
+security-header gaps; local Server Action exception-recovery opportunities; and
+a review need for mandatory applicant data and analytics cookie behavior. These
+are bounded observations and recommendations, not claims of exploited flaws.
 Passive-only scope: public navigation and ordinary requests; no exploitation,
 fuzzing, scanning, endpoint guessing, authentication bypass or production load tests.
 
@@ -161,6 +163,8 @@ python3 examples/smoke.py
 - [Actual verification results](docs/VERIFICATION.md)
 - [Assessment submission text](docs/SUBMISSION.md)
 
-The highest-priority remaining task is to obtain permitted public-site evidence,
-verify the official company domain, and replace conditional applicability with
-supported findings. Do that before presenting this as a completed Cynbit audit.
+The public site identifies as Cynbit Technologies and lists the matching internship.
+The email did not supply a domain; independent ownership authentication is limited.
+The remaining work requires internal/staging access: server-side validation,
+delivery guarantees, retention, authenticated product authorization and capacity.
+No production vulnerability, database bottleneck or load-test result is claimed.

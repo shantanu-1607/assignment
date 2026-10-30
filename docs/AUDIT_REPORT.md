@@ -1,86 +1,109 @@
-# Backend technical assessment: Cynbit
+# Cynbit: backend technical audit
 
 ## Executive summary
 
-This submission pairs a deliberately bounded audit with a runnable Go reference
-backend. **No Cynbit-origin behavior was verified.** The environment rejected
-public research requests at its outbound proxy; even the candidate official domain
-could not be independently corroborated. E-001–E-004 in [EVIDENCE](EVIDENCE.md)
-document the limitation. There are no confirmed target vulnerabilities, performance
-measurements, API endpoints, products or stack identifications in this report.
+Cynbit's public site at [www.cynbit.in](https://www.cynbit.in/) presents AI automation,
+custom software/cloud services and three products: Cynbit Studio, TenantEase and
+Revio. Its careers page lists the relevant Backend Developer Intern role. Brand,
+location, domain-linked social profile and matching role support the selection;
+the employer did not provide a URL, and independent ownership confirmation remains
+limited. See E-005–E-007 in the [evidence ledger](EVIDENCE.md).
 
-The highest-value deliverable currently supported by evidence is a small, tested
-reference design: strict JSON contracts, sanitized errors, bounded resource use,
-context cancellation and conditional HTTP caching. Findings F-001–F-004 are
-**conditional engineering opportunities**, not defects attributed to Cynbit.
+The public marketing frontend exhibits Next.js/RSC and Vercel caching indicators.
+Static marketing pages already benefit from cache hits and validators; careers
+and blog documents use no-store. Forms integrate with Next.js Server Actions in
+public client bundles. There was no ordinary-navigation REST JSON API payload to
+audit, and no submission was made to manufacture one.
 
-## Scope and confidence
+The strongest improvement opportunities are client/server contract alignment for
+form lengths, local recovery around action exceptions, sampled response-header
+hardening, applicant data minimization, and analytics inventory/consent review.
+No exploit, authentication bypass, production bottleneck or data leak is claimed.
 
-| Label | Meaning in this report |
-|---|---|
-| Observed | Directly collected evidence; here, research-proxy rejection only |
-| Inferred | Interpretation with explicit assumptions; no target stack inference made |
-| Proposed | Standalone design that could apply if corresponding product needs exist |
-| Unverified | Requires permitted origin/browser or internal evidence |
+A tested standalone Go reference API demonstrates strict input contracts,
+consistent safe errors, bounded work, deadline propagation and public-only
+conditional caching. It is a reference design, not a clone or integration with
+Cynbit. The examples remain deliberately illustrative and collect no personal data.
 
-The employer's assessment context is user-provided. The requester suggested
-`https://www.cynbit.in/`, but their email contained no official link. E-004
-records the blocked attempt to retrieve that candidate homepage. Independent confirmation of
-company identity, offerings and publicly visible flows remains outstanding. The
-reference service names are invented examples, explicitly labeled in code and
-responses. They must never be quoted as discovered production routes or payloads.
+## Scope, evidence and limits
 
-## Backend architecture and lifecycle
+Observation: October 31, 2026 IST, ordinary public browser navigation plus public
+headers and browser-loaded assets. No accounts, forms, authenticated product areas,
+private APIs, crafted failures, load generation or vulnerability scanners. Cookies
+were inspected by name/attributes only. Public contact details and applicant data
+are not included in evidence artifacts. [EVIDENCE](EVIDENCE.md) provides exact
+sources, UTC timestamps, sanitized excerpts and limitations.
 
-Observed: a local client attempted to access a candidate public domain through the
-managed proxy and was denied before origin communication. This tells us nothing
-about Cynbit's CDN, backend language, hosting or data stores.
+- **Observed:** directly visible behavior, DOM, headers or public client code.
+- **Inferred:** interpretation with stated assumptions, not runtime proof.
+- **Proposed:** engineering recommendation or standalone reference design.
 
-Proposed: HTTP edge termination feeds a single Go process; API policy surrounds
-small handlers that call a context-aware service. No database, background workers,
-authentication provider or external network calls are needed for this stateless
-example. Its response lifecycle is documented in [ARCHITECTURE](ARCHITECTURE.md).
-Adding services or a database without a demonstrated need would introduce failure
-modes without improving this assessment.
+## Backend architecture
 
-## API and payload analysis
+**Observed (E-008–E-010):** the browser receives HTML, versioned Next.js assets and
+RSC responses. Link prefetching requests normally linked pages. Header evidence
+supports prerendering and Vercel edge caching for sampled pages. Careers/blog are
+dynamically delivered or otherwise explicitly uncacheable at the observed layer.
 
-All target-specific entries below remain unverified. The rightmost column is a
-reference design, not an observation.
+**Disclosed (E-017):** privacy text names Resend and Prisma. This is not proof of a
+specific email pipeline, schema, database engine or live credential configuration.
+The services page's broad technology list is a capability claim, not a stack bill
+of materials.
 
-| Area | Needed evidence | Illustrative implementation |
+**Inferred:** inquiry/demo/newsletter actions likely hand data to server-side
+handlers. Their implementation, validation, storage and delivery guarantees are
+not publicly demonstrated. Revio's advertised role hierarchy and TenantEase's
+financial features imply important future authorization boundaries, but those
+products were not exercised and their controls cannot be graded here.
+
+**Proposed:** retain public-page caching, validate untrusted input at every action
+boundary, use explicit response/error contracts, and place irreversible delivery
+behind a durable handoff only if real delivery requirements justify it. No reason
+was established to split this website into microservices. See [architecture
+comparison](ARCHITECTURE.md).
+
+## API, payload and error review
+
+| Area | Observed | Assessment / recommendation |
 |---|---|---|
-| Naming/versioning | Actual ordinary-navigation requests | `/v1/services`, `/v1/estimates` |
-| Methods and status | Request/response pairs | GET/HEAD catalog; POST stateless calculation; 200, 304, 400, 404, 405, 413, 415, 422, 429, 500, 503 |
-| JSON and validation | Public payloads, documented input schema | Exact keys and types, required fields, duplicate/null rejection, bounded ranges |
-| Error hygiene | Naturally occurring errors | Stable error code/message and server-generated request ID; internal details excluded |
-| Pagination | Actual collection size and access pattern | Omitted for two immutable entries; add bounded cursor pagination for real large collections |
-| Data exposure | Public response field inventory | No personal/contact data; only illustrative service IDs and effort units |
-| Caching | Origin cache headers and content semantics | Public catalog uses ETag, 60-second freshness and conditional GET; errors and estimates use no-store |
-| Timeout/retry | Actual behavior and upstream contracts | Two-second application budget; 503 on deadline; no external retries |
-| Idempotency | Side effects and failure/retry semantics | Calculation has no persisted effect; repeated POST yields same domain result, different request ID |
+| Endpoints and methods | Normal page GETs, RSC GETs and client Server Action references | No public REST/version convention established; do not relabel RSC as a business JSON API |
+| Payloads | Contact fields fullName/email/company/industry/message; demo fields plus client-added serviceType | Analyze as visible input contracts; actual wire action encoding and server validation unverified |
+| Codes | 200 on inspected pages; no production errors deliberately caused | Reference has explicit 4xx/5xx; no claim about actual action error status |
+| Validation | HTML required/email constraints; no HTML maxLength | Share length/range rules with server; HTML validation alone never protects a backend (F-001) |
+| Error handling | Action callers branch on success and show generic messages | Good error-detail hygiene; add exception recovery and guaranteed pending cleanup (F-004) |
+| Pagination | Blog has page/category links; second page changes articles | Bounded public pagination exists; internal query shape and maximum limits unknown |
+| Caching | Public HIT + ETag on marketing; no-store MISS on careers/blog | Preserve working cache; review freshness needs before changing dynamic pages (F-003) |
+| Retry/idempotency | Delivery semantics not tested | Avoid blind retries of inquiry/email mutations; add idempotency only if retry/replay requirements warrant it |
+| Exposure | Ordinary HTML/RSC and public client code | No private applicant payloads, session tokens or authenticated API data inspected |
 
-The catalog returns `{ "data": [...] }` with request ID in `X-Request-ID` only.
-Putting per-request IDs in a cacheable representation would change its ETag every
-request. Uncacheable responses include `request_id` in JSON as well.
+Illustrative reference contracts, **not Cynbit endpoints**:
 
-## Security and performance conclusions
+```http
+GET /v1/services
+POST /v1/estimates
+Content-Type: application/json
 
-See [SECURITY_FINDINGS](SECURITY_FINDINGS.md) and
-[PERFORMANCE_ANALYSIS](PERFORMANCE_ANALYSIS.md). No severity rating is assigned to
-unobserved target behavior. Priorities express the value of validating a control,
-not a confirmed breach risk. The reference backend demonstrates selected controls;
-it is not a security certification or a drop-in production application.
+{"service_id":"api-review","integrations":2}
+```
 
-## Prioritized next work
+A valid calculation returns 200 and effort_units 7; errors have stable code/message
+and request ID. The cacheable catalog puts request ID only in its header so
+representation bytes and ETag remain stable. Full examples are in the README.
 
-1. Restore permitted research access and verify company identity. This gates all
-   target-specific conclusions and is more valuable than expanding the demo.
-2. Capture representative, sanitized browser evidence and map actual contracts.
-3. Validate applicable controls against owners' internal documentation and existing
-   tests, with authorization. Public absence of a header or endpoint cannot prove
-   absence of server-side validation, authorization or observability.
-4. Reprioritize conditional recommendations with impact, confidence and cost.
+## Priorities and confidence
 
-No real site latency, throughput, database efficiency or scalability result is
-claimed. Required follow-up is explicit rather than hidden behind generic findings.
+1. **F-007 / data minimization:** mandatory applicant DOB/address/dual contact
+   fields justify a purpose and collection-stage review. Strong UI evidence;
+   retention/access controls remain unknown.
+2. **F-001 and F-004 / submission reliability:** align client/server bounds and
+   recover rejected action calls. Strong DOM/client-code evidence; no server
+   rejection defect or live failure proven.
+3. **F-005 / response policy:** add a reviewed CSP, nosniff, referrer and framing
+   policy on sampled HTML routes. Header absence confirmed, exploitability unknown.
+4. **F-006 / analytics:** reconcile pre-choice analytics cookies with consent,
+   documented categories and applicable regional requirements. Not a legal finding.
+5. **F-002 and F-003 / capacity and caching:** validate existing private controls
+   internally and measure before optimizing. No demonstrated production bottleneck.
+
+Detailed confidence, scope and tradeoffs are in [security findings](SECURITY_FINDINGS.md),
+[performance](PERFORMANCE_ANALYSIS.md), and [recommendations](RECOMMENDATIONS.md).

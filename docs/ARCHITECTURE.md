@@ -1,64 +1,63 @@
-# Architecture
+# Observed and proposed architecture
 
-## Observed research path
-
-```mermaid
-flowchart LR
-  A[Research client] --> B[Managed outbound proxy]
-  B --> C[CONNECT rejected: 403]
-  C -. no origin observation .-> D[Candidate domain: official identity unverified]
-```
-
-No target backend, API, database, CDN or authentication provider can be inferred
-from this path.
-
-## Proposed standalone design
+## Public request flow (E-008–E-017)
 
 ```mermaid
 flowchart LR
-  A[Local caller] --> B[Go HTTP server]
-  B --> C[Response security policy / request ID]
-  C --> D[Peer quota and bounded admission]
-  D --> E[Context deadline / buffered response]
-  E --> F[Versioned routes / strict input decoding]
-  F --> G[Context-aware calculator]
-  F --> H[Immutable public catalog / ETag]
-  B --> I[JSON logs: ID and duration]
-  J[Signal] --> K[Readiness false / drain then close]
-  K --> B
+  Browser[Public browser] --> Edge[Vercel cache indicators]
+  Edge --> HTML[HTML and prerendered marketing content]
+  Edge --> Dynamic[Careers and blog: no-store responses]
+  Browser --> Assets[Next.js assets and RSC prefetch]
+  Assets --> Forms[Contact / demo / newsletter client code]
+  Forms -. referenced actions; not invoked .-> Actions[Server Actions boundary]
+  Actions -. internals unverified .-> Unknown[Validation / storage / delivery unknown]
+  Policy[Privacy-policy disclosure] -. disclosure only .-> Providers[Resend and Prisma]
 ```
 
-For an actual public deployment, place an independently configured HTTPS edge
-before B and configure trusted proxy behavior. This diagram claims no deployed
-infrastructure.
+Solid edges describe captured navigation/response behavior; dotted edges describe
+client-code references or policy disclosures without backend execution proof.
+No database engine, service topology or product authentication stack is inferred.
 
-## Error and middleware flow
+## Proposed application boundary
+
+```mermaid
+flowchart LR
+  Caller --> Edge[HTTPS edge / reviewed browser policy]
+  Edge --> Boundary[Size / quota / deadline / correlation]
+  Boundary --> Validate[Schema and authorization where required]
+  Validate --> Domain[Application operation]
+  Domain --> Public[Explicitly public cacheable reads]
+  Domain -. only for real delivery needs .-> Queue[Durable job acceptance]
+  Queue -. bounded worker; proposed .-> Email[Email provider]
+  Boundary --> Telemetry[Sanitized logs / status and duration metrics]
+```
+
+This is a recommendation, not deployed Cynbit infrastructure. A durable queue is
+conditional on real delivery requirements and is not added to the stateless demo.
+
+## Implemented Go reference
 
 ```mermaid
 flowchart TD
-  R[Request] --> ID[Generate request ID and response policy]
-  ID --> P{GET health/readiness?}
-  P -->|yes| Probe[Return probe result]
-  P -->|no| Ready{Accepting work?}
-  Ready -->|no| Drain[503 no-store]
+  R[Request] --> ID[Generate request ID / JSON security policy]
+  ID --> Probe{GET health/readiness?}
+  Probe -->|yes| Health[Health or readiness response]
+  Probe -->|no| Ready{Accepting work?}
+  Ready -->|no| Drain[503 draining]
   Ready -->|yes| Rate{Peer quota?}
-  Rate -->|no| Q[429 plus Retry-After]
-  Rate -->|yes| Slot{Worker slot?}
+  Rate -->|no| Quota[429 / Retry-After]
+  Rate -->|yes| Slot{Worker capacity?}
   Slot -->|no| Busy[503 busy]
-  Slot -->|yes| Time[Run handler under deadline]
-  Time --> Decode[Method, media type, JSON, domain validation]
-  Decode --> Result[Small buffered JSON response]
-  Time -->|deadline| Deadline[503 timeout and cancel context]
-  Result --> Release[Release slot after worker exits]
-  Deadline -. worker exit .-> Release
+  Slot -->|yes| Budget[Context deadline / buffered small response]
+  Budget --> Route[Versioned route / strict JSON / domain rules]
+  Route --> Read[Public catalog / ETag]
+  Route --> Compute[Context-aware calculator]
+  Budget -->|deadline| Timeout[503 and cancel]
+  Route --> Exit[Worker exit releases slot]
+  Timeout -. eventual worker exit .-> Exit
 ```
 
-## Package boundaries
-
-- `cmd/server`: process lifecycle and HTTP server limits.
-- `internal/config`: validated non-secret environment configuration.
-- `internal/api`: HTTP contract, response policy, limiter and admission.
-- `internal/service`: HTTP-independent deterministic domain logic.
-
-Tests inject an estimator to demonstrate cancellation, failure hygiene and
-concurrency admission without calling production systems.
+Packages: `cmd/server` owns process/server lifecycle; `internal/config` validates
+non-secret configuration; `internal/api` owns contracts and HTTP resource policy;
+`internal/service` owns deterministic logic. Tests inject estimators to simulate
+failure/cancellation locally. No test touches Cynbit.
