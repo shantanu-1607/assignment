@@ -92,6 +92,7 @@ func (a *API) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	id := hex.EncodeToString(random[:])
 	h := w.Header()
+	h.Set("Content-Type", "application/json")
 	h.Set("X-Request-ID", id)
 	h.Set("X-Content-Type-Options", "nosniff")
 	h.Set("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'")
