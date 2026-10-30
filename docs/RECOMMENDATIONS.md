@@ -2,7 +2,7 @@
 
 ## Evidence-to-code traceability
 
-All applicability is **proposed/unverified** because E-001–E-003 prevented target
+All applicability is **proposed/unverified** because E-001–E-004 prevented target
 observation. The chain is: documented access limitation → explicit assumption of
 a possible public JSON workflow → general engineering control → runnable example
 → behavior test. It is not a chain of discovered vulnerabilities.

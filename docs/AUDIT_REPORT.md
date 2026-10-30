@@ -5,7 +5,7 @@
 This submission pairs a deliberately bounded audit with a runnable Go reference
 backend. **No Cynbit-origin behavior was verified.** The environment rejected
 public research requests at its outbound proxy; even the candidate official domain
-could not be independently corroborated. E-001–E-003 in [EVIDENCE](EVIDENCE.md)
+could not be independently corroborated. E-001–E-004 in [EVIDENCE](EVIDENCE.md)
 document the limitation. There are no confirmed target vulnerabilities, performance
 measurements, API endpoints, products or stack identifications in this report.
 
@@ -23,7 +23,9 @@ context cancellation and conditional HTTP caching. Findings F-001–F-004 are
 | Proposed | Standalone design that could apply if corresponding product needs exist |
 | Unverified | Requires permitted origin/browser or internal evidence |
 
-The employer's assessment context is user-provided. Independent confirmation of
+The employer's assessment context is user-provided. The requester suggested
+`https://www.cynbit.in/`, but their email contained no official link. E-004
+records the blocked attempt to retrieve that candidate homepage. Independent confirmation of
 company identity, offerings and publicly visible flows remains outstanding. The
 reference service names are invented examples, explicitly labeled in code and
 responses. They must never be quoted as discovered production routes or payloads.

@@ -1,7 +1,7 @@
 # Security findings and control review
 
 **Confirmed Cynbit vulnerabilities: none. Target security posture: unverified.**
-E-001–E-003 are environment access failures. They are not security findings about
+E-001–E-004 are environment access failures. They are not security findings about
 Cynbit. The following opportunities apply only if matching functionality exists.
 
 | ID | Category / applicability | Evidence and confidence | Recommendation / reference coverage |

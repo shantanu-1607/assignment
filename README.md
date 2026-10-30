@@ -8,7 +8,9 @@ database or third-party services required.
 > website audit is incomplete: public research was blocked by the environment's
 > outbound proxy, and the official domain remains unverified. No target-origin
 > headers, API payloads, vulnerabilities or performance results are asserted.
-> See the [evidence ledger](docs/EVIDENCE.md) before interpreting any recommendation.
+> The requester suggested `https://www.cynbit.in/`; its homepage request was also
+> blocked before origin access. See the [evidence ledger](docs/EVIDENCE.md) before
+> interpreting any recommendation.
 
 ## Five-minute review
 
